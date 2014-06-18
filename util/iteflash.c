@@ -14,6 +14,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 #include <ftdi.h>
 #pragma GCC diagnostic pop
