@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 #include <ftdi.h>
 #pragma GCC diagnostic pop
