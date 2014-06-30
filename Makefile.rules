@@ -201,17 +201,16 @@ $(out)/TAGS: $(out)/cscope.files
 $(out)/tags: $(out)/cscope.files
 	$(call quiet,ctags,CTAGS  )
 
-.PHONY: xrefs
 xrefs: $(call targ_if_prog,etags,$(out)/TAGS) \
 	$(call targ_if_prog,ctags,$(out)/tags)
 
-.PHONY: clean
 clean:
 	-rm -rf $(out)
 
-.PHONY: clobber
 clobber:
 	-rm -rf build TAGS cscope.files cscope.out .config .config.old .config.tmp .kconfig.d
+
+.PHONY: xrefs clean clobber
 
 .SECONDARY:
 
