@@ -7,7 +7,7 @@
 #
 
 # Toolchain configuration
-HOST_CROSS_COMPILE ?= x86_64-pc-linux-gnu-
+HOST_CROSS_COMPILE ?= x86_64-unknown-linux-gnu-
 
 CC=$(CROSS_COMPILE)gcc
 CPP=$(CROSS_COMPILE)cpp
@@ -17,6 +17,7 @@ OBJDUMP=$(CROSS_COMPILE)objdump
 PKG_CONFIG?=pkg-config
 BUILDCC?=gcc
 HOSTCC?=$(HOST_CROSS_COMPILE)gcc
+HOSTCXX?=$(HOST_CROSS_COMPILE)g++
 
 CFLAGS_WARN=-Wall -Werror -Wundef -Wstrict-prototypes -Wno-trigraphs      \
             -fno-strict-aliasing -fno-common                              \

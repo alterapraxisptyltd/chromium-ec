@@ -1,0 +1,41 @@
+
+mainmenu "embedded controller configuration"
+
+menu "General setup"
+
+config LOCALVERSION
+	string "Local version string"
+	help
+	  Append an extra string to the end of the EC version.
+
+	  This can be useful if, for instance, you want to append the
+	  respective board's hostname or some other identifying string to
+	  the coreboot version number, so that you can easily distinguish
+	  boot logs of different boards from each other.
+
+choice
+	prompt "Compiler to use"
+	default COMPILER_GCC
+	help
+	  This option allows you to select the compiler used for building
+	  coreboot.
+
+config COMPILER_GCC
+	bool "GCC"
+	help
+	  Use the GNU Compiler Collection (GCC) to build coreboot.
+
+	  For details see http://gcc.gnu.org.
+
+config COMPILER_LLVM_CLANG
+	bool "LLVM/clang"
+	help
+	  Use LLVM/clang to build coreboot.
+
+	  For details see http://clang.llvm.org.
+
+endchoice
+
+endmenu
+
+# source src/mainboard/Kconfig

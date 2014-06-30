@@ -11,8 +11,77 @@ PROJECT?=ec
 
 # Output directory for build objects
 out?=build/$(BOARD)
+obj?=build
 
-include Makefile.toolchain
+export top := $(CURDIR)
+export src := src
+export srck := $(top)/util/kconfig
+export objutil ?= $(obj)/util
+export objk := $(objutil)/kconfig
+
+# Kconfig things #
+export KCONFIG_AUTOHEADER := $(obj)/config.h
+export KCONFIG_AUTOCONFIG := $(obj)/auto.conf
+export KCONFIG_DEPENDENCIES := $(obj)/auto.conf.cmd
+export KCONFIG_SPLITCONFIG := $(obj)/config
+export KCONFIG_TRISTATE := $(obj)/tristate.conf
+export KCONFIG_NEGATIVES := 1
+
+CONFIG_SHELL := sh
+KBUILD_DEFCONFIG := configs/defconfig
+UNAME_RELEASE := $(shell uname -r)
+DOTCONFIG ?= .config
+export KCONFIG_CONFIG = $(DOTCONFIG)
+HAVE_DOTCONFIG := $(wildcard $(DOTCONFIG))
+MAKEFLAGS += -rR --no-print-directory
+
+HOSTCC = gcc
+HOSTCXX = g++
+HOSTCFLAGS := -g
+HOSTCXXFLAGS := -g
+
+all: real-all
+
+# This include must come _before_ the pattern rules below!
+# Order _does_ matter for pattern rules.
+include util/kconfig/Makefile
+
+# Three cases where we don't need fully populated $(obj) lists:
+# 1. when no .config exists
+# 2. when make config (in any flavour) is run
+# 3. when make distclean is run
+# Don't waste time on reading all Makefile.incs in these cases
+ifeq ($(strip $(HAVE_DOTCONFIG)),)
+NOCOMPILE:=1
+endif
+ifneq ($(MAKECMDGOALS),)
+ifneq ($(filter %config %clean cross%,$(MAKECMDGOALS)),)
+NOCOMPILE:=1
+endif
+ifeq ($(MAKECMDGOALS), %clean)
+NOMKDIR:=1
+endif
+endif
+
+ifeq ($(NOCOMPILE),1)
+real-all: menuconfig
+
+else # NOCOMPILE == 0
+
+include $(HAVE_DOTCONFIG)
+
+# Include toolchain specifics
+ifeq ($(CONFIG_COMPILER_LLVM_CLANG),y)
+# TODO - write one for Clang also
+endif
+ifeq ($(CONFIG_COMPILER_GCC),y)
+include Makefile.toolchain.gcc
+endif
+#
+ifeq ($(CONFIG_COMPILER_LLVM_CLANG),y)
+HOSTCC = clang
+HOSTCXX = clang++
+endif
 
 # The board makefile sets $CHIP and the chip makefile sets $CORE.
 # Include those now, since they must be defined for _flag_cfg below.
@@ -50,6 +119,8 @@ CPPFLAGS+=$(foreach t,$(_tsk_cfg),-D$(t))
 _flag_cfg:=$(shell $(CPP) $(CPPFLAGS) -P -dM -Ichip/$(CHIP) -Iboard/$(BOARD) \
 	include/config.h | grep -o "\#define CONFIG_[A-Z0-9_]*" | \
 	cut -c9- | sort)
+#_flag_cfg:=$(shell cat build/config.h | grep -o "\#define CONFIG_[A-Z0-9_]*" | \
+#	cut -c9- | sort)
 
 $(foreach c,$(_tsk_cfg) $(_flag_cfg),$(eval $(c)=y))
 
@@ -93,5 +164,13 @@ all-y+=$(call objs_from_dir,power,power)
 all-y+=$(call objs_from_dir,test,$(PROJECT))
 dirs=core/$(CORE) chip/$(CHIP) board/$(BOARD) private common power test util
 dirs+=$(shell find driver -type d)
+
+# The primary target needs to be here before we include the
+# other files
+
+real-all: real-target
+.PHONY : real-target
+
+endif # ifeq NOCOMPILE,1
 
 include Makefile.rules
