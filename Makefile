@@ -35,6 +35,14 @@ export KCONFIG_CONFIG = $(DOTCONFIG)
 HAVE_DOTCONFIG := $(wildcard $(DOTCONFIG))
 MAKEFLAGS += -rR --no-print-directory
 
+# Make is silent per default, but 'make V=1' will show all compiler calls.
+Q:=@
+ifneq ($(V),1)
+ifneq ($(Q),)
+.SILENT:
+endif
+endif
+
 HOSTCC = gcc
 HOSTCXX = g++
 HOSTCFLAGS := -g
