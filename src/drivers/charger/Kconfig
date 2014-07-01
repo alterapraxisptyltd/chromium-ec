@@ -1,0 +1,43 @@
+# Battery charger ICs
+
+config CHARGER_BQ24192
+	bool "Support for BQ24192 Charger"
+	default n
+	help
+	  Enable support for BQ24192 Charger
+
+config CHARGER_BQ24707A
+	bool "Support for BQ24707A Charger"
+	default n
+	help
+	  Enable support for BQ24707A Charger
+
+config CHARGER_BQ24715
+	bool "Support for BQ24715 Charger"
+	default n
+	help
+	  Enable support for BQ24715 Charger
+
+config CHARGER_BQ24725
+	bool "Support for BQ24725 Charger"
+	default n
+	help
+	  Enable support for BQ24725 Charger
+
+config CHARGER_BQ24735
+	bool "Support for BQ24735 Charger"
+	default n
+	help
+	  Enable support for BQ24735 Charger
+
+config CHARGER_BQ24738
+	bool "Support for BQ24738 Charger"
+	default n
+	help
+	  Enable support for BQ24738 Charger
+
+config CHARGER_BQ24773
+	bool "Support for BQ24773 Charger"
+	default n
+	help
+	  Enable support for BQ24773 Charger

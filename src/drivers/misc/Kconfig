@@ -1,0 +1,14 @@
+# Accelerometers
+config ACCEL_KXCJ9
+	bool "Support for KXCJ9 Accelerometer driver"
+	default n
+
+# ALS drivers
+config ALS_ISL29035
+	bool "Support for ALS ISL29035 driver"
+	default n
+
+# Voltage regulators
+config REGULATOR_IR357X
+	bool "Support for ir357x voltage regulator driver"
+	default n

@@ -1,0 +1,31 @@
+# Batteries
+
+config BATTERY_BQ20Z453
+	bool "Support for BQ20Z453 Battery"
+	default n
+	help
+	  Enable support for BQ20Z453 Battery
+
+config BATTERY_BQ27541
+	bool "Support for BQ27541 Battery"
+	default n
+	help
+	  Enable support for BQ27541 Battery
+
+config BATTERY_LINK
+	bool "Support for Link Battery"
+	default n
+	help
+	  Enable support for Link Battery
+
+config BATTERY_SAMUS
+	bool "Support for Samus Battery"
+	default n
+	help
+	  Enable support for Samus Battery
+
+config BATTERY_SMART
+	bool "Support for Smart Battery"
+	default n
+	help
+	  Enable support for Smart Battery

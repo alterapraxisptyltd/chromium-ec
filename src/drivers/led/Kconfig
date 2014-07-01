@@ -1,0 +1,13 @@
+# LED drivers
+
+config LED_DRIVER_DS2413
+	bool "Support for DS2413 LED driver"
+	default n
+	help
+	  Enable support for DS2413 LED driver
+
+config LED_DRIVER_LP5562
+	bool "Support for LP5562 LED driver"
+	default n
+	help
+	  Enable support for LP5562 LED driver

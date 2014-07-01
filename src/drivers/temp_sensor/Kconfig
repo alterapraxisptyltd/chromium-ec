@@ -1,0 +1,13 @@
+# Temperature sensors
+
+config TEMP_SENSOR_G781
+	bool "Support for G781 Temperature sensor driver"
+	default n
+
+config TEMP_SENSOR_TMP006
+	bool "Support for TMP006 Temperature sensor driver"
+	default n
+
+config TEMP_SENSOR_TMP432
+	bool "Support for TMP432 Temperature sensor driver"
+	default n

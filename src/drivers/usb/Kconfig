@@ -1,0 +1,4 @@
+# USB switches
+config USB_SWITCH_TSU6721
+	bool "Support for tsu6721 usb switche driver"
+	default n

@@ -1,0 +1,4 @@
+# Current/Power monitor
+config INA231
+	bool "Support for ina231 current/power monitor driver"
+	default n

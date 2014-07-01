@@ -1,0 +1,3 @@
+# LED drivers
+driver-$(CONFIG_LED_DRIVER_DS2413)+=ds2413.o
+driver-$(CONFIG_LED_DRIVER_LP5562)+=lp5562.o
