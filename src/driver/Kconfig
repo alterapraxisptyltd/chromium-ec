@@ -1,0 +1,27 @@
+menu "Misc Drivers"
+source src/driver/misc/Kconfig
+endmenu
+
+menu "Battery Drivers"
+source src/driver/battery/Kconfig
+endmenu
+
+menu "Charger Drivers"
+source src/driver/charger/Kconfig
+endmenu
+
+menu "LED Drivers"
+source src/driver/led/Kconfig
+endmenu
+
+menu "Power Monitor Drivers"
+source src/driver/power_mon/Kconfig
+endmenu
+
+menu "Tempature Sensor Drivers"
+source src/driver/temp_sensor/Kconfig
+endmenu
+
+menu "USB Switch Drivers"
+source src/driver/usb/Kconfig
+endmenu

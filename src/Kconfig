@@ -45,7 +45,7 @@ source src/common/Kconfig
 source src/power/Kconfig
 
 menu "Generic Drivers"
-source src/drivers/Kconfig
+source src/driver/Kconfig
 endmenu
 
 # source src/mainboard/Kconfig
