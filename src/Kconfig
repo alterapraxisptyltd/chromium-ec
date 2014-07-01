@@ -38,7 +38,32 @@ endchoice
 
 endmenu
 
+# board -> chip -> core (ISA)
 source src/board/Kconfig
+
+# This option is used to set the architecture ISA of the EC.
+# It is usually set in src/board/*/Kconfig.
+config CORE_CORETEX-M
+	bool
+	default n
+config CORE_CORETEX-M
+	bool
+	default n
+config CORE_HOST
+	bool
+	default n
+config CORE_NDS32
+	bool
+	default n
+config CORE_8051
+	bool
+	default n
+
+#source src/core/cortex-m/Kconfig
+#source src/core/cortex-m0/Kconfig
+#source src/core/host/Kconfig
+#source src/core/nds32/Kconfig
+#source src/core/8051/Kconfig
 
 source src/common/Kconfig
 
