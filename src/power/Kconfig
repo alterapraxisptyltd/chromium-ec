@@ -1,0 +1,23 @@
+config CHIPSET_BAYTRAIL
+	bool
+	default n
+
+config CHIPSET_GAIA
+	bool
+	default n
+
+config CHIPSET_HASWELL
+	bool
+	default n
+
+config CHIPSET_IVYBRIDGE
+	bool
+	default n
+
+config CHIPSET_TEGRA
+	bool
+	default n
+
+config POWER_COMMON
+	bool
+	default n
