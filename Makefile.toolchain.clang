@@ -1,0 +1,62 @@
+# -*- makefile -*-
+# Copyright (c) 2012 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+#
+# Toolchain configuration build system
+#
+
+# Toolchain configuration
+HOST_CROSS_COMPILE ?= clang
+
+CC=$(CROSS_COMPILE)gcc
+CPP=$(CROSS_COMPILE)cpp
+LD=$(CROSS_COMPILE)ld
+OBJCOPY=$(CROSS_COMPILE)objcopy
+OBJDUMP=$(CROSS_COMPILE)objdump
+PKG_CONFIG?=pkg-config
+BUILDCC?=clang
+HOSTCC?=$(HOST_CROSS_COMPILE)
+HOSTCXX?=$(HOST_CROSS_COMPILE)
+
+CFLAGS_WARN=-Wall -Werror -Wundef -Wstrict-prototypes -Wno-trigraphs      \
+            -fno-strict-aliasing -fno-common                              \
+            -Werror-implicit-function-declaration -Wno-format-security    \
+            -Wdeclaration-after-statement \
+            -Wno-pointer-sign -fno-strict-overflow
+
+CFLAGS_DEBUG= -g
+CFLAGS_INCLUDE=$(foreach i,$(includes),-I$(i) ) -I.
+CFLAGS_TEST=$(if $(TEST_BUILD),-DTEST_BUILD \
+                               -DTEST_TASKFILE=$(PROJECT).tasklist,) \
+            $(if $(EMU_BUILD),-DEMU_BUILD) \
+            $(if $($(PROJECT)-scale),-DTEST_TIME_SCALE=$($(PROJECT)-scale)) \
+            -DTEST_$(PROJECT) -DTEST_$(UC_PROJECT)
+CFLAGS_COVERAGE=$(if $(TEST_COVERAGE),-fprofile-arcs -ftest-coverage \
+				      -DTEST_COVERAGE,)
+CFLAGS_DEFINE=-DOUTDIR=$(out) -DCHIP=$(CHIP) -DBOARD_TASKFILE=ec.tasklist \
+              -DBOARD=$(BOARD) -DCORE=$(CORE) -DPROJECT=$(PROJECT) \
+              -DCHIP_VARIANT=$(CHIP_VARIANT) -DCHIP_FAMILY=$(CHIP_FAMILY) \
+              -DBOARD_$(UC_BOARD) -DCHIP_$(UC_CHIP) -DCORE_$(UC_CORE) \
+              -DCHIP_VARIANT_$(UC_CHIP_VARIANT) -DCHIP_FAMILY_$(UC_CHIP_FAMILY)
+CPPFLAGS=$(CFLAGS_DEFINE) $(CFLAGS_INCLUDE) $(CFLAGS_TEST) \
+	 $(EXTRA_CFLAGS) $(CFLAGS_COVERAGE)
+CFLAGS=$(CPPFLAGS) $(CFLAGS_CPU) $(CFLAGS_DEBUG) $(CFLAGS_WARN) $(CFLAGS_y)
+CFLAGS+= -ffunction-sections -fshort-wchar
+
+FTDIVERSION=$(shell $(PKG_CONFIG) --modversion libftdi1 2>/dev/null)
+ifneq ($(FTDIVERSION),)
+  LIBFTDI_NAME=ftdi1
+else
+  LIBFTDI_NAME=ftdi
+endif
+
+LIBFTDI_CFLAGS=$(shell $(PKG_CONFIG) --cflags lib${LIBFTDI_NAME})
+LIBFTDI_LDLIBS=$(shell $(PKG_CONFIG) --libs   lib${LIBFTDI_NAME})
+
+BUILD_CFLAGS= $(LIBFTDI_CFLAGS) $(CPPFLAGS) -O3 $(CFLAGS_DEBUG) $(CFLAGS_WARN)
+HOST_CFLAGS=$(CPPFLAGS) -O3 $(CFLAGS_DEBUG) $(CFLAGS_WARN)
+LDFLAGS=-nostdlib -X --gc-sections
+BUILD_LDFLAGS=$(LIBFTDI_LDLIBS)
+HOST_TEST_LDFLAGS=-T core/host/host_exe.lds -lrt -pthread -rdynamic -lm\
+		  $(if $(TEST_COVERAGE),-fprofile-arcs,)

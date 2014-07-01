@@ -73,6 +73,7 @@ include $(HAVE_DOTCONFIG)
 # Include toolchain specifics
 ifeq ($(CONFIG_COMPILER_LLVM_CLANG),y)
 # TODO - write one for Clang also
+include Makefile.toolchain.clang
 endif
 ifeq ($(CONFIG_COMPILER_GCC),y)
 include Makefile.toolchain.gcc

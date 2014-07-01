@@ -171,13 +171,13 @@ $(out)/%.elf: $(out)/%.lds $(objs)
 $(out)/$(PROJECT).exe: $(objs)
 	$(call quiet,exe,EXE    )
 
-$(out)/%.o:%.c
+$(out)/%.o: %.c
 	$(call quiet,c_to_o,CC     )
 
-$(out)/vboot/%.o:$(VBOOT_SOURCE)/%.c
+$(out)/vboot/%.o: $(VBOOT_SOURCE)/%.c
 	$(call quiet,c_to_o,CC     )
 
-$(out)/%.o:%.S
+$(out)/%.o: %.S
 	$(call quiet,c_to_o,AS     )
 
 $(out)/common/version.o: $(out)/ec_version.h
@@ -211,8 +211,7 @@ clean:
 
 .PHONY: clobber
 clobber:
-	-rm -rf build TAGS cscope.files cscope.out
-	-rm -f .config .config.old ..config.tmp .kconfig.d
+	-rm -rf build TAGS cscope.files cscope.out .config .config.old .config.tmp .kconfig.d
 
 .SECONDARY:
 
