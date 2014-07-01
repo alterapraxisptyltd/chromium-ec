@@ -38,4 +38,6 @@ endchoice
 
 endmenu
 
+source src/board/Kconfig
+
 # source src/mainboard/Kconfig
