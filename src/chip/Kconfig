@@ -1,0 +1,33 @@
+# FIXME!!! Make sure chips depend on the correct core??
+
+config CHIP_HOST
+	bool
+	depends on CORE_HOST
+	default n
+
+config CHIP_IT83XX
+	bool
+	depends on CORE_CORETEX-M
+	default n
+
+config CHIP_LM4
+	bool
+	depends on CORE_CORETEX-M
+	default n
+
+config CHIP_MEC1322
+	bool
+	depends on CORE_CORETEX-M
+	default n
+
+config CHIP_STM32
+	bool
+	depends on CORE_CORETEX-M
+	default n
+
+# FIXME: make chip config headers into Kconfig mubojumbo
+#source src/chip/host/Kconfig
+#source src/chip/it83xx/Kconfig
+#source src/chip/lm4/Kconfig
+#source src/chip/mec1322/Kconfig
+#source src/chip/stm32/Kconfig
