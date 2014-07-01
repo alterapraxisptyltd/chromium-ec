@@ -1,0 +1,207 @@
+config ACCEL_CALIBRATE
+	bool
+	default n
+
+config ADC
+	bool
+	default n
+
+config ALS
+	bool
+	default n
+
+config AP_HANG_DETECT
+	bool
+	default n
+
+config BACKLIGHT_LID
+	bool
+	default n
+
+config BATTERY_BQ27541
+	bool
+	default n
+
+config BATTERY_SMART
+	bool
+	default n
+
+config BUTTON_COUNT
+	bool
+	default n
+
+config CAPSENSE
+	bool
+	default n
+
+config CHARGER
+	bool
+	default n
+
+config CHARGER_V1
+	bool
+	default n
+
+config CHARGER_V2
+	bool
+	default n
+
+config CHARGER_TPS65090
+	bool
+	default n
+
+config CMD_I2CWEDGE
+	bool
+	default n
+
+config COMMON_GPIO
+	bool
+	default n
+
+config COMMON_PANIC_OUTPUT
+	bool
+	default n
+
+config COMMON_RUNTIME
+	bool
+	default n
+
+config COMMON_TIMER
+	bool
+	default n
+
+config PMU_POWERINFO
+	bool
+	default n
+
+config PMU_TPS65090
+	bool
+	default n
+
+config EOPTION
+	bool
+	default n
+
+config EXTPOWER_FALCO
+	bool
+	default n
+
+config EXTPOWER_GPIO
+	bool
+	default n
+
+config EXTPOWER_SNOW
+	bool
+	default n
+
+config EXTPOWER_SPRING
+	bool
+	default n
+
+config FANS
+	bool
+	default n
+
+config FLASH
+	bool
+	default n
+
+config FMAP
+	bool
+	default n
+
+config I2C
+	bool
+	default n
+
+config I2C_ARBITRATION
+	bool
+	default n
+
+config KEYBOARD_PROTOCOL_8042
+	bool
+	default n
+
+config KEYBOARD_PROTOCOL_MKBP
+	bool
+	default n
+
+config KEYBOARD_TEST
+	bool
+	default n
+
+config LED_COMMON
+	bool
+	default n
+
+config LID_ANGLE_KEY_SCAN
+	bool
+	default n
+
+config LID_SWITCH
+	bool
+	default n
+
+config LPC
+	bool
+	default n
+
+config ONEWIRE
+	bool
+	default n
+
+config POWER_BUTTON
+	bool
+	default n
+
+config POWER_BUTTON_X86
+	bool
+	default n
+
+config PSTORE
+	bool
+	default n
+
+config PWM
+	bool
+	default n
+
+config PWM_KBLIGHT
+	bool
+	default n
+
+config SHA1
+	bool
+	default n
+
+config SOFTWARE_CLZ
+	bool
+	default n
+
+config SWITCH
+	bool
+	default n
+
+config TEMP_SENSOR
+	bool
+	default n
+
+config USB_PORT_POWER_DUMB
+	bool
+	default n
+
+config USB_PORT_POWER_SMART
+	bool
+	default n
+
+config USB_POWER_DELIVERY
+	bool
+	default n
+
+config VBOOT_HASH
+	bool
+	default n
+
+config WIRELESS
+	bool
+	default n

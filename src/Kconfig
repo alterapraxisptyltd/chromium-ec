@@ -40,6 +40,8 @@ endmenu
 
 source src/board/Kconfig
 
+source src/common/Kconfig
+
 menu "Generic Drivers"
 source src/drivers/Kconfig
 endmenu
