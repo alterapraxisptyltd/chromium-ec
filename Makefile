@@ -112,7 +112,7 @@ UC_PROJECT:=$(call uppercase,$(PROJECT))
 # the board/project/chip/core variables are defined, since some of the configs
 # are dependent on particular configurations.
 includes=include core/$(CORE)/include $(dirs) $(out) test
-ifeq "$(TEST_BUILD)" "y"
+ifeq ($(TEST_BUILD),y)
 	_tsk_lst:=$(shell echo "CONFIG_TASK_LIST CONFIG_TEST_TASK_LIST" | \
 		    $(CPP) -P -Iboard/$(BOARD) -Itest \
 		    -D"TASK_NOTEST(n, r, d, s)=" -D"TASK_ALWAYS(n, r, d, s)=n" \
@@ -133,7 +133,7 @@ _flag_cfg:=$(shell $(CPP) $(CPPFLAGS) -P -dM -Ichip/$(CHIP) -Iboard/$(BOARD) \
 
 $(foreach c,$(_tsk_cfg) $(_flag_cfg),$(eval $(c)=y))
 
-ifneq "$(CONFIG_COMMON_RUNTIME)" "y"
+ifneq ($(CONFIG_COMMON_RUNTIME),y)
 	_irq_list:=$(shell $(CPP) $(CPPFLAGS) -P -Ichip/$(CHIP) -Iboard/$(BOARD) \
 		-D"ENABLE_IRQ(x)=EN_IRQ x" -imacros chip/$(CHIP)/registers.h \
 		board/$(BOARD)/ec.irqlist | grep "EN_IRQ .*" | cut -c8-)
