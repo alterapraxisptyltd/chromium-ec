@@ -142,9 +142,9 @@ coverage: $(cov-test-targets)
 
 .PHONY: coverage
 
-$(out)/firmware_image.lds: common/firmware_image.lds.S
+$(out)/firmware_image.lds: src/common/firmware_image.lds.S
 	$(call quiet,lds,LDS    )
-$(out)/%.lds: core/$(CORE)/ec.lds.S
+$(out)/%.lds: src/core/$(CORE)/ec.lds.S
 	$(call quiet,lds,LDS    )
 
 $(out)/%.bin: $(out)/%.obj
@@ -156,7 +156,7 @@ $(out)/%.bin: $(out)/%.obj
 
 flat-y = $(out)/$(PROJECT).RO.flat $(out)/$(PROJECT).RW.flat
 
-$(out)/%.obj: common/firmware_image.S $(out)/firmware_image.lds $(flat-y)
+$(out)/%.obj: src/common/firmware_image.S $(out)/firmware_image.lds $(flat-y)
 	$(call quiet,flat_to_obj,CAT    )
 
 $(out)/%.dis: $(out)/%.elf
@@ -180,8 +180,8 @@ $(out)/vboot/%.o: $(VBOOT_SOURCE)/%.c
 $(out)/%.o: %.S
 	$(call quiet,c_to_o,AS     )
 
-$(out)/common/version.o: $(out)/ec_version.h
-$(out)/ec_version.h: $(filter-out $(out)/common/version.o,$(objs))
+$(out)/src/common/version.o: $(out)/ec_version.h
+$(out)/ec_version.h: $(filter-out $(out)/src/common/version.o,$(objs))
 	$(call quiet,version,VERSION)
 
 $(build-utils): $(out)/%:$(build-srcs)

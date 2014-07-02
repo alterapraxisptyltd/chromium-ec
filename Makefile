@@ -6,11 +6,12 @@
 #
 
 BOARD ?= bds
+VENDOR ?= unknown
 
 PROJECT?=ec
 
 # Output directory for build objects
-out?=build/$(BOARD)
+out?=build/$(VENDOR)/$(BOARD)
 obj?=build
 
 export top := $(CURDIR)
@@ -94,8 +95,8 @@ endif
 
 # The board makefile sets $CHIP and the chip makefile sets $CORE.
 # Include those now, since they must be defined for _flag_cfg below.
-include board/$(BOARD)/build.mk
-include chip/$(CHIP)/build.mk
+include src/board/$(VENDOR)/$(BOARD)/build.mk
+include src/chip/$(CHIP)/build.mk
 
 # Create uppercase config variants, to avoid mixed case constants.
 # Also translate '-' to '_', so 'cortex-m' turns into 'CORTEX_M'.  This must
@@ -111,22 +112,22 @@ UC_PROJECT:=$(call uppercase,$(PROJECT))
 # Transform the configuration into make variables.  This must be done after
 # the board/project/chip/core variables are defined, since some of the configs
 # are dependent on particular configurations.
-includes=include core/$(CORE)/include $(dirs) $(out) test
+includes=src/include src/core/$(CORE)/include src $(dirs) $(out) test
 ifeq ($(TEST_BUILD),y)
 	_tsk_lst:=$(shell echo "CONFIG_TASK_LIST CONFIG_TEST_TASK_LIST" | \
-		    $(CPP) -P -Iboard/$(BOARD) -Itest \
+		    $(CPP) -P -Isrc/board/$(VENDOR)/$(BOARD) -Itest \
 		    -D"TASK_NOTEST(n, r, d, s)=" -D"TASK_ALWAYS(n, r, d, s)=n" \
 		    -D"TASK_TEST(n, r, d, s)=n" -imacros ec.tasklist \
 		    -imacros $(PROJECT).tasklist)
 else
 	_tsk_lst:=$(shell echo "CONFIG_TASK_LIST" | $(CPP) -P \
-		    -Iboard/$(BOARD) -D"TASK_NOTEST(n, r, d, s)=n" \
+		    -Isrc/board/$(VENDOR)/$(BOARD) -D"TASK_NOTEST(n, r, d, s)=n" \
 		    -D"TASK_ALWAYS(n, r, d, s)=n" -imacros ec.tasklist)
 endif
 _tsk_cfg:=$(foreach t,$(_tsk_lst) ,HAS_TASK_$(t))
 CPPFLAGS+=$(foreach t,$(_tsk_cfg),-D$(t))
-_flag_cfg:=$(shell $(CPP) $(CPPFLAGS) -P -dM -Ichip/$(CHIP) -Iboard/$(BOARD) \
-	include/config.h | grep -o "\#define CONFIG_[A-Z0-9_]*" | \
+_flag_cfg:=$(shell $(CPP) $(CPPFLAGS) -P -dM -Isrc/chip/$(CHIP) -Isrc/board/$(VENDOR)/$(BOARD) \
+	src/include/config.h | grep -o "\#define CONFIG_[A-Z0-9_]*" | \
 	cut -c9- | sort)
 #_flag_cfg:=$(shell cat build/config.h | grep -o "\#define CONFIG_[A-Z0-9_]*" | \
 #	cut -c9- | sort)
@@ -134,24 +135,24 @@ _flag_cfg:=$(shell $(CPP) $(CPPFLAGS) -P -dM -Ichip/$(CHIP) -Iboard/$(BOARD) \
 $(foreach c,$(_tsk_cfg) $(_flag_cfg),$(eval $(c)=y))
 
 ifneq ($(CONFIG_COMMON_RUNTIME),y)
-	_irq_list:=$(shell $(CPP) $(CPPFLAGS) -P -Ichip/$(CHIP) -Iboard/$(BOARD) \
-		-D"ENABLE_IRQ(x)=EN_IRQ x" -imacros chip/$(CHIP)/registers.h \
-		board/$(BOARD)/ec.irqlist | grep "EN_IRQ .*" | cut -c8-)
+	_irq_list:=$(shell $(CPP) $(CPPFLAGS) -P -Isrc/chip/$(CHIP) -Isrc/board/$(VENDOR)/$(BOARD) \
+		-D"ENABLE_IRQ(x)=EN_IRQ x" -imacros src/chip/$(CHIP)/registers.h \
+		src/board/$(VENDOR)/$(BOARD)/ec.irqlist | grep "EN_IRQ .*" | cut -c8-)
 	CPPFLAGS+=$(foreach irq,$(_irq_list),\
 		    -D"irq_$(irq)_handler_optional=irq_$(irq)_handler")
 endif
 
 # Get build configuration from sub-directories
 # Note that this re-includes the board and chip makefiles
-include board/$(BOARD)/build.mk
-include chip/$(CHIP)/build.mk
-include core/$(CORE)/build.mk
+include src/board/$(VENDOR)/$(BOARD)/build.mk
+include src/chip/$(CHIP)/build.mk
+include src/core/$(CORE)/build.mk
 
 $(eval BOARD_$(UC_BOARD)=y)
 
-include common/build.mk
-include driver/build.mk
-include power/build.mk
+include src/common/build.mk
+include src/driver/build.mk
+include src/power/build.mk
 -include private/build.mk
 include test/build.mk
 include util/build.mk
@@ -163,16 +164,16 @@ objs_from_dir=$(sort $(foreach obj, $($(2)-y), \
 	        $(out)/$(1)/$(firstword $($(2)-mock-$(PROJECT)-$(obj)) $(obj))))
 
 # Get all sources to build
-all-y=$(call objs_from_dir,core/$(CORE),core)
-all-y+=$(call objs_from_dir,chip/$(CHIP),chip)
-all-y+=$(call objs_from_dir,board/$(BOARD),board)
+all-y=$(call objs_from_dir,src/core/$(CORE),core)
+all-y+=$(call objs_from_dir,src/chip/$(CHIP),chip)
+all-y+=$(call objs_from_dir,src/board/$(VENDOR)/$(BOARD),board)
 all-y+=$(call objs_from_dir,private,private)
-all-y+=$(call objs_from_dir,common,common)
-all-y+=$(call objs_from_dir,driver,driver)
-all-y+=$(call objs_from_dir,power,power)
+all-y+=$(call objs_from_dir,src/common,common)
+all-y+=$(call objs_from_dir,src/driver,driver)
+all-y+=$(call objs_from_dir,src/power,power)
 all-y+=$(call objs_from_dir,test,$(PROJECT))
-dirs=core/$(CORE) chip/$(CHIP) board/$(BOARD) private common power test util
-dirs+=$(shell find driver -type d)
+dirs=src/core/$(CORE) src/chip/$(CHIP) src/board/$(VENDOR)/$(BOARD) private src/common src/power test util
+dirs+=$(shell find src/driver -type d)
 
 # The primary target needs to be here before we include the
 # other files
