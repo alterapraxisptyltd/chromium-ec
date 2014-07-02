@@ -58,7 +58,7 @@ include util/kconfig/Makefile
 # 1. when no .config exists
 # 2. when make config (in any flavour) is run
 # 3. when make distclean is run
-# Don't waste time on reading all Makefile.incs in these cases
+# Don't waste time on reading all build.mk's in these cases
 ifeq ($(strip $(HAVE_DOTCONFIG)),)
 NOCOMPILE:=1
 endif
